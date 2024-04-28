@@ -56,6 +56,22 @@ export const constantRoutes = [
   },
 
   {
+    path: '/dev',
+    component: Layout,
+    redirect: '/dev/data_convert',
+    name: 'Dev',
+    meta: { title: '开发', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'data_convert',
+        name: 'DataConvert',
+        component: () => import('@/views/data_convert/index'),
+        meta: { title: '数据转换', icon: 'table' }
+      }
+    ]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
