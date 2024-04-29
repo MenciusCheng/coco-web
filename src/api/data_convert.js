@@ -31,3 +31,11 @@ export function del(data) {
     data
   })
 }
+
+export function gen(data) {
+  return request({
+    url: '/dataConvert/gen',
+    method: 'post',
+    data
+  })
+}

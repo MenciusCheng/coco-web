@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-form :inline="true" :model="dataConvertQueryForm">
+    <el-form :inline="true" :model="dataConvertQueryForm" size="mini">
       <el-form-item label="配置名称">
         <el-input v-model="dataConvertQueryForm.confName"></el-input>
       </el-form-item>
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import * as data_convert from '@/api/data_convert';
+import * as api_data_convert from '@/api/data_convert';
 import { dateFormat } from '@/utils/timeUtil';
 
 export default {
@@ -78,9 +78,7 @@ export default {
       dataConvertRules: {
         confContent: [],
         confName: [],
-        createdAt: [],
         id: [],
-        updatedAt: []
       },
       dataConvertTableData: [],
       dataConvertTableLoading: false
@@ -94,7 +92,7 @@ export default {
         confName: this.dataConvertQueryForm.confName,
       }
       this.dataConvertTableLoading = true;
-      data_convert.postList(param).then(res => {
+      api_data_convert.postList(param).then(res => {
         let { records, total } = res.data;
         for (let i = 0; i < records.length; i++) {
           let record = records[i];
@@ -119,7 +117,7 @@ export default {
         let param = {
           id: row.id,
         }
-        data_convert.del(param).then(res => {
+        api_data_convert.del(param).then(res => {
           this.$message.success('删除成功');
           this.queryDataConvert(this.dataConvertPagination.page);
         })
@@ -171,7 +169,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        data_convert.create(param).then(res => {
+        api_data_convert.create(param).then(res => {
           this.$message.success('添加成功');
           this.queryDataConvert(this.dataConvertPagination.page);
           this.resetDataConvertDialog();
@@ -186,7 +184,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        data_convert.update(param).then(res => {
+        api_data_convert.update(param).then(res => {
           this.$message.success('修改成功');
           this.queryDataConvert(this.dataConvertPagination.page);
           this.resetDataConvertDialog();
