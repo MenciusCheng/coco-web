@@ -97,6 +97,10 @@ export default {
         {
           value: "sql",
           label: "sql"
+        },
+        {
+          value: "sql2",
+          label: "sql2"
         }
       ],
       genList: [],
@@ -162,18 +166,22 @@ export default {
       });
     },
     updateDataConvert(param) {
-      this.$confirm('此操作将修改该记录, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        api_data_convert.update(param).then(res => {
-          this.$message.success('修改成功');
-          this.queryDataConvert();
-        })
-      }).catch(() => {
-        this.$message.info('已取消修改');
+      api_data_convert.update(param).then(res => {
+        this.$message.success('修改成功');
+        this.queryDataConvert();
       });
+      // this.$confirm('此操作将修改该记录, 是否继续?', '提示', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消',
+      //   type: 'warning'
+      // }).then(() => {
+      //   api_data_convert.update(param).then(res => {
+      //     this.$message.success('修改成功');
+      //     this.queryDataConvert();
+      //   })
+      // }).catch(() => {
+      //   this.$message.info('已取消修改');
+      // });
     },
     handleDataConvertIdChange(id) {
       this.genList = [];
