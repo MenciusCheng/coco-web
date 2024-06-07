@@ -65,9 +65,15 @@ export const constantRoutes = [
       {
         path: 'data_convert',
         name: 'DataConvert',
-        component: () => import('@/views/data_convert/index'),
+        component: () => import('@/views/dev/data_convert/index'),
         meta: { title: '数据转换', icon: 'table' }
-      }
+      },
+      {
+        path: 'text_convert',
+        name: 'TextConvert',
+        component: () => import('@/views/dev/text_convert/index'),
+        meta: { title: '文本转换', icon: 'table' }
+      },
     ]
   },
 

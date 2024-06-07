@@ -16,42 +16,47 @@
       </el-form-item>
     </el-form>
 
-    <el-form :inline="true" :model="dataConvert" :rules="dataConvertRules" label-width="80px" ref="dataConvert"
-      size="mini">
+    <el-form :model="dataConvert" :rules="dataConvertRules" label-width="80px" ref="dataConvert" size="mini">
       <el-row>
-        <el-col :span="11">
+        <el-col :span="12">
           <el-form-item label="数据类型" prop="dataSourceType">
-            <el-select v-model="dataConvert.conf.dataSourceType" filterable placeholder="请选择" style="width: 350px;">
+            <el-select v-model="dataConvert.conf.dataSourceType" filterable placeholder="请选择" style="width: 100%;">
               <el-option v-for="item in dataSourceTypeOptions" :key="item.value" :label="item.label"
                 :value="item.value"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="11">
-          <el-form-item label="配置名称" prop="dataSource">
-            <el-input type="input" v-model="dataConvert.confName" style="width: 250px;"></el-input>
-          </el-form-item>
-          <el-form-item label="id" prop="id" label-width="40px">
-            <el-input type="input" readonly disabled v-model="dataConvert.id" style="width: 50px;"></el-input>
-          </el-form-item>
+        <el-col :span="12">
+          <el-row>
+            <el-col :span="18">
+              <el-form-item label="配置名称" prop="dataSource">
+                <el-input type="input" v-model="dataConvert.confName" style="width: 100%;"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="id" prop="id" label-width="40px">
+                <el-input type="input" readonly disabled v-model="dataConvert.id" style="width: 100%;"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="11">
+        <el-col :span="12">
           <el-form-item label="数据源" prop="dataSource">
-            <el-input type="textarea" v-model="dataConvert.conf.dataSource" :rows="16" style="width: 350px;"></el-input>
+            <el-input type="textarea" v-model="dataConvert.conf.dataSource" :rows="16" style="width: 100%;"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="11">
+        <el-col :span="12">
           <el-form-item label="模板内容" prop="template">
-            <el-input type="textarea" v-model="dataConvert.conf.template" :rows="16" style="width: 350px;"></el-input>
+            <el-input type="textarea" v-model="dataConvert.conf.template" :rows="16" style="width: 100%;"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24" v-for="(item, index) in genList">
           <el-form-item :label="item.name ? item.name : '生成内容'">
-            <el-input type="textarea" v-model="genList[index].content" :rows="16" style="width: 800px;"></el-input>
+            <el-input type="textarea" v-model="genList[index].content" :rows="16" style="width: 100%;"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
