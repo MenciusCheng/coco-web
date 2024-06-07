@@ -74,6 +74,12 @@ export const constantRoutes = [
         component: () => import('@/views/dev/text_convert/index'),
         meta: { title: '文本转换', icon: 'table' }
       },
+      {
+        path: 'time_convert',
+        name: 'TimeConvert',
+        component: () => import('@/views/dev/time_convert/index'),
+        meta: { title: '时间转换', icon: 'table' }
+      },
     ]
   },
 
