@@ -80,6 +80,12 @@ export const constantRoutes = [
         component: () => import('@/views/dev/time_convert/index'),
         meta: { title: '时间转换', icon: 'table' }
       },
+      {
+        path: 'regexp',
+        name: 'regexp',
+        component: () => import('@/views/dev/regexp/index'),
+        meta: { title: '正则表达式', icon: 'table' }
+      },
     ]
   },
 
