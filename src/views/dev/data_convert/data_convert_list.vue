@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-form :inline="true" :model="dataConvertQueryForm" size="mini">
+    <el-form :inline="true" :model="dataConvertQueryForm" size="medium">
       <el-form-item label="配置名称">
         <el-input v-model="dataConvertQueryForm.confName"></el-input>
       </el-form-item>
@@ -13,7 +13,7 @@
     <el-table v-loading="dataConvertTableLoading" :data="dataConvertTableData" border>
       <el-table-column align="center" label="ID" prop="id"></el-table-column>
       <el-table-column align="center" label="配置名称" prop="confName"></el-table-column>
-      <el-table-column align="center" label="配置内容" prop="confContent"></el-table-column>
+      <!-- <el-table-column align="center" label="配置内容" prop="confContent"></el-table-column> -->
       <el-table-column align="center" label="创建时间" prop="createdAt"></el-table-column>
       <el-table-column align="center" label="更新时间" prop="updatedAt"></el-table-column>
       <el-table-column label="操作" width="160px">

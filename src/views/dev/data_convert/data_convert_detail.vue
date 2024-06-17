@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-form :inline="true" :model="dataConvertQueryForm" size="mini">
+    <el-form :inline="true" :model="dataConvertQueryForm" size="medium">
       <el-form-item label="选择配置" label-width="80px">
         <el-select v-model="dataConvertQueryForm.dataConvertId" clearable filterable placeholder="请选择"
           @change="handleDataConvertIdChange" style="width: 350px;">
@@ -16,7 +16,7 @@
       </el-form-item>
     </el-form>
 
-    <el-form :model="dataConvert" :rules="dataConvertRules" label-width="80px" ref="dataConvert" size="mini">
+    <el-form :model="dataConvert" :rules="dataConvertRules" label-width="80px" ref="dataConvert" size="medium">
       <el-row>
         <el-col :span="12">
           <el-form-item label="数据类型" prop="dataSourceType">

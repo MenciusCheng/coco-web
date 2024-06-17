@@ -8,7 +8,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="2">
-        <el-form-item label-width="0" prop="">
+        <el-form-item label-width="10px" prop="">
           <el-button type="primary" size="medium" @click="regexpFind">匹配</el-button>
         </el-form-item>
       </el-col>
@@ -30,7 +30,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="2">
-        <el-form-item label-width="0" prop="">
+        <el-form-item label-width="10px" prop="">
           <el-button type="primary" size="medium" @click="regexpReplace">替换</el-button>
         </el-form-item>
       </el-col>
@@ -42,7 +42,7 @@
       </el-col>
       <el-col :span="24">
         <el-form-item size="large">
-          <el-button type="primary" @click="submitForm">提交</el-button>
+          <!-- <el-button type="primary" @click="submitForm">提交</el-button> -->
           <el-button @click="resetForm">重置</el-button>
         </el-form-item>
       </el-col>
