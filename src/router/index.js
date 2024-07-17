@@ -63,6 +63,12 @@ export const constantRoutes = [
     meta: { title: '开发', icon: 'el-icon-s-help' },
     children: [
       {
+        path: 'gen_stream',
+        name: 'GenStream',
+        component: () => import('@/views/dev/gen_stream/index'),
+        meta: { title: '流式生成器', icon: 'table' }
+      },
+      {
         path: 'data_convert',
         name: 'DataConvert',
         component: () => import('@/views/dev/data_convert/index'),
