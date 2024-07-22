@@ -96,6 +96,34 @@ export const constantRoutes = [
   },
 
   {
+    path: '/proto',
+    component: Layout,
+    redirect: '/proto/gen_stream_form',
+    name: 'proto',
+    meta: { title: '原型', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'gen_stream_form',
+        name: 'gen_stream_form',
+        component: () => import('@/views/proto/gen_stream_form/index'),
+        meta: { title: '流式表单', icon: 'table' }
+      },
+      {
+        path: 'gen_stream_form_gpt',
+        name: 'gen_stream_form_gpt',
+        component: () => import('@/views/proto/gen_stream_form/gpt'),
+        meta: { title: '流式表单(gpt)', icon: 'table' }
+      },
+      {
+        path: 'todo',
+        name: 'todo',
+        component: () => import('@/views/proto/gen_stream_form/index'),
+        meta: { title: '占位', icon: 'table' }
+      },
+    ]
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',

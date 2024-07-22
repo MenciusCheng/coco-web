@@ -1,118 +1,46 @@
 <template>
   <section>
-    <el-form :inline="true" :model="genStreamQueryForm" size="medium">
-      <el-form-item label="选择配置" label-width="80px">
-        <el-select v-model="genStreamQueryForm.genStreamId" clearable filterable placeholder="请选择"
-          @change="handleGenStreamIdChange" style="width: 350px;">
-          <el-option v-for="item in genStreamQueryForm.genStreamOptions" :key="item.id" :label="item.optionName"
-            :value="item.id"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button @click="genGenStream()" type="primary">生成</el-button>
-        <el-button @click="saveGenStream()" type="primary">保存</el-button>
-        <el-button @click="saveGenStream(true)" type="primary">另存为</el-button>
-        <el-button @click="resetGenStream()" type="primary">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <el-row>
+      <el-col :span="24">
+        <!-- 工具条 -->
+        <Toolbar :configs="configs" @config-change="selectConfig" @save="saveConfig" @copy="copyConfig"
+          @reset="resetConfig" @generate="generateResult" />
 
-    <el-form :model="genStream" :rules="genStreamRules" label-width="80px" ref="genStream" size="medium">
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="数据类型" prop="dataSourceType">
-            <el-select v-model="genStream.conf.dataSourceType" filterable placeholder="请选择" style="width: 100%;">
-              <el-option v-for="item in dataSourceTypeOptions" :key="item.value" :label="item.label"
-                :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-row>
-            <el-col :span="18">
-              <el-form-item label="配置名称" prop="dataSource">
-                <el-input type="input" v-model="genStream.confName" style="width: 100%;"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="id" prop="id" label-width="40px">
-                <el-input type="input" readonly disabled v-model="genStream.id" style="width: 100%;"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="数据源" prop="dataSource">
-            <el-input type="textarea" v-model="genStream.conf.dataSource" :rows="16" style="width: 100%;"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="模板内容" prop="template">
-            <el-input type="textarea" v-model="genStream.conf.template" :rows="16" style="width: 100%;"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24" v-for="(item, index) in genList">
-          <el-form-item :label="item.name ? item.name : '生成内容'">
-            <el-input type="textarea" v-model="genList[index].content" :rows="16" style="width: 100%;"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
+        <!-- 配置部分 -->
+        <ConfigEditor :config="currentConfig" ref="configEditor" />
+
+        <!-- 生成结果部分 -->
+        <ResultList :results="generatedResults" />
+      </el-col>
+    </el-row>
   </section>
 </template>
 
 <script>
 import * as apiGenStreamConf from '@/api/gen_stream_conf';
-import { dateFormat } from '@/utils/timeUtil';
+import Toolbar from './Toolbar.vue';
+import ConfigEditor from './ConfigEditor.vue';
+import ResultList from './ResultList.vue';
 
 export default {
+  components: {
+    Toolbar,
+    ConfigEditor,
+    ResultList
+  },
   data() {
     return {
-      genStream: {
+      configs: [], // 预先加载的配置列表
+      currentConfig: {
         id: 0,
-        confName: '',
-        extend: '',
-        conf: {
-          dataSourceType: '',
-          dataSource: '',
-          template: ''
-        },
+        name: '',
+        details: []
       },
-      genStreamQueryForm: {
-        genStreamId: '',
-        genStreamOptions: [],
-      },
-      genStreamRules: {
-        extend: [],
-        confName: [],
-        id: [],
-      },
-      dataSourceTypeOptions: [
-        {
-          value: "tabRow",
-          label: "tabRow"
-        },
-        {
-          value: "json",
-          label: "json"
-        },
-        {
-          value: "sql",
-          label: "sql"
-        },
-        {
-          value: "sql2",
-          label: "sql2"
-        }
-      ],
-      genList: [],
-    }
+      generatedResults: []
+    };
   },
   methods: {
-    queryGenStream() {
+    loadConfig() {
       let param = {
         page: 1,
         size: 10000,
@@ -120,129 +48,104 @@ export default {
       apiGenStreamConf.query(param).then(res => {
         let { list } = res.data;
         for (let i = 0; i < list.length; i++) {
-          let record = list[i];
-          record.optionName = `${record.confName}(${record.id})`;
+          list[i].name = list[i].confName;
         }
-        this.genStreamQueryForm.genStreamOptions = list;
+        this.configs = list;
       }).catch(err => {
         console.log(err);
       });
     },
-    saveGenStream(isOther) {
-      // 保存
-      this.$refs['genStream'].validate((valid) => {
-        if (valid) {
-          let param = Object.assign({}, this.genStream);
-          param.extend = JSON.stringify(param.conf);
-          if (isOther) {
-            // 另存为
-            param.id = 0;
-          }
-          if (param.id > 0) {
-            this.updateGenStream(param);
-          } else {
-            this.insertGenStream(param);
-          }
-        } else {
-          this.$message.warning('请检查参数');
-          return false;
-        }
-      });
+    selectConfig(selectedConfigId) {
+      this.resetConfig();
+      // 加载选中的配置
+      const config = this.configs.find(c => c.id === selectedConfigId);
+      if (config) {
+        // this.currentConfig = JSON.parse(JSON.stringify(config));
+        this.currentConfig.id = config.id;
+        this.currentConfig.name = config.name;
+        this.currentConfig.details = JSON.parse(config.extend);
+      } else {
+        this.loadConfig();
+      }
     },
-    insertGenStream(param) {
-      this.$confirm('此操作将新增记录, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+    saveConfig() {
+      // // 保存当前配置
+      // const newConfig = {
+      //   id: this.$refs.configEditor.config.id,
+      //   name: this.$refs.configEditor.config.name,
+      //   details: this.$refs.configEditor.config.details
+      // };
+      // // 提交保存逻辑
+      // console.log("saveConfig", newConfig);
+
+      const config = this.$refs.configEditor.config;
+      let param = {
+        id: config.id,
+        confName: config.name,
+        extend: JSON.stringify(config.details)
+      }
+      if (param.id > 0) {
+        apiGenStreamConf.update(param).then(res => {
+          this.$message.success('修改成功');
+          this.loadConfig();
+        });
+      } else {
         apiGenStreamConf.create(param).then(res => {
           this.$message.success('添加成功');
-          this.queryGenStream();
+          this.loadConfig();
           let { id } = res.data;
-          this.genStream.id = id;
-          this.genStreamQueryForm.genStreamId = id;
-        })
-      }).catch(() => {
-        this.$message.info('已取消添加');
-      });
-    },
-    updateGenStream(param) {
-      apiGenStreamConf.update(param).then(res => {
-        this.$message.success('修改成功');
-        this.queryGenStream();
-      });
-      // this.$confirm('此操作将修改该记录, 是否继续?', '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   type: 'warning'
-      // }).then(() => {
-      //   apiGenStreamConf.update(param).then(res => {
-      //     this.$message.success('修改成功');
-      //     this.queryGenStream();
-      //   })
-      // }).catch(() => {
-      //   this.$message.info('已取消修改');
-      // });
-    },
-    handleGenStreamIdChange(id) {
-      this.genList = [];
-      if (!id) {
-        this.queryGenStream();
-        this.genStream = {
-          id: 0,
-          confName: '',
-          extend: '',
-          conf: {
-            dataSourceType: '',
-            dataSource: '',
-            template: ''
-          },
-        };
-        return
+          console.log("saveConfig id", id);
+          this.resetConfig(); // TODO 改为选中新的
+        });
       }
-      this.genStreamQueryForm.genStreamOptions.find(item => {
-        if (item.id === id) {
-          const extend = JSON.parse(item.extend);
-          this.genStream = {
-            id: item.id,
-            confName: item.confName,
-            extend: item.extend,
-            conf: {
-              dataSourceType: extend.dataSourceType,
-              dataSource: extend.dataSource,
-              template: extend.template
-            }
-          };
-        }
-      });
     },
-    resetGenStream() {
-      this.genStream = {
+    copyConfig() {
+      // 复制当前配置
+      const newConfig = {
         id: 0,
-        confName: '',
-        extend: '',
-        conf: {
-          dataSourceType: '',
-          dataSource: '',
-          template: ''
-        },
+        name: `${this.currentConfig.name}-复制`,
+        details: [...this.currentConfig.details]
       };
-      this.genStreamQueryForm.genStreamId = '';
-      this.genList = [];
+      this.configs.push(newConfig);
     },
-    genGenStream() {
-      let param = Object.assign({}, this.genStream.conf);
+    resetConfig() {
+      // 重置当前配置
+      this.currentConfig = {
+        id: 0,
+        name: '',
+        details: []
+      };
+      this.generatedResults = [];
+    },
+    generateResult() {
+      const configs = [];
+      const details = this.$refs.configEditor.config.details;
+      if (details) {
+        details.forEach(detail => {
+          const config = {
+            type: detail.parserType,
+            text: detail.parserText
+          }
+          configs.push(config);
+        });
+      }
+      let param = {
+        configs
+      }
+      this.generatedResults = [];
       apiGenStreamConf.gen(param).then(res => {
         this.$message.success('生成成功');
         let { list } = res.data;
-        this.genList = list;
+        if (list) {
+          this.generatedResults = list;
+        }
       });
     }
   },
-  async mounted() {
-    this.queryGenStream();
-  }
-}
+  mounted() {
+    this.loadConfig();
+  },
+};
 </script>
 
-<style scoped></style>
+<style></style>
