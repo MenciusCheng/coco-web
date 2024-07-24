@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="80px" size="medium">
+  <el-form label-width="80px" size="small">
     <el-row>
       <el-col :span="12">
         <el-form-item label="选择配置" label-width="80px">

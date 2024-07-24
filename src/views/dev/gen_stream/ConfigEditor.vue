@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="80px" ref="genStream" size="medium">
+  <el-form label-width="80px" ref="genStream" size="small">
     <el-row>
       <el-col :span="12">
         <el-form-item label="配置名称">
@@ -8,11 +8,12 @@
       </el-col>
       <el-col :span="12">
         <el-form-item>
-          <el-button @click="addDetail" type="primary">添加配置详情</el-button>
+          <el-button @click="addDetail(0)" type="primary">添加</el-button>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row v-for="(detail, index) in config.details" :key="index">
+      <el-divider content-position="left">{{ index+1 }}</el-divider>
       <el-row>
         <el-col :span="12">
           <el-form-item label="解析类型" prop="parserType">
@@ -24,6 +25,9 @@
         </el-col>
         <el-col :span="12">
           <el-form-item>
+            <el-button @click="addDetail(index + 1)" type="primary">添加</el-button>
+            <el-button @click="moveDetail(index, -1)" type="primary">上移</el-button>
+            <el-button @click="moveDetail(index, 1)" type="primary">下移</el-button>
             <el-button @click="removeDetail(index)" type="danger">删除</el-button>
           </el-form-item>
         </el-col>
@@ -150,8 +154,11 @@ export default {
     // }
   },
   methods: {
-    addDetail() {
-      this.config.details.push({
+    addDetail(index) {
+      if (index < 0 || index > this.config.details.length) {
+        return;
+      }
+      this.config.details.splice(index, 0, {
         parserType: '',
         parserOption: '',
         parserText: ''
@@ -159,6 +166,19 @@ export default {
     },
     removeDetail(index) {
       this.config.details.splice(index, 1);
+    },
+    moveDetail(index, step) {
+      const newIndex = index + step;
+      if (index < 0 || index >= this.config.details.length) {
+        return;
+      }
+      if (newIndex < 0 || newIndex >= this.config.details.length) {
+        return;
+      }
+
+      let temp = this.config.details[index];
+      this.config.details.splice(index, 1);
+      this.config.details.splice(newIndex, 0, temp);
     },
     isInParserOption(opt, selectedOpts) {
       if (selectedOpts && selectedOpts.length > 0) {
