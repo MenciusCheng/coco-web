@@ -1,6 +1,6 @@
 <template>
   <section>
-    <el-form :inline="true" :model="genStreamQueryForm" size="medium">
+    <el-form :inline="true" :model="genStreamQueryForm" size="medium" @submit.native.prevent>
       <el-form-item label="配置名称">
         <el-input v-model="genStreamQueryForm.confName"></el-input>
       </el-form-item>

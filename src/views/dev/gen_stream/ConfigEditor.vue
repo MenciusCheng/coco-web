@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="80px" ref="genStream" size="small">
+  <el-form label-width="80px" ref="genStream" size="small" @submit.native.prevent>
     <el-row>
       <el-col :span="12">
         <el-form-item label="配置名称">
@@ -9,6 +9,8 @@
       <el-col :span="12">
         <el-form-item>
           <el-button @click="addDetail(0)" type="primary" icon="el-icon-plus"></el-button>
+          <el-button @click="addDetail(index + 1)" type="primary" icon="el-icon-plus">从模版</el-button>
+          <el-button @click="addDetail(index + 1)" type="primary">保存模版</el-button>
         </el-form-item>
       </el-col>
     </el-row>
@@ -26,6 +28,8 @@
         <el-col :span="12">
           <el-form-item>
             <el-button @click="addDetail(index + 1)" type="primary" icon="el-icon-plus"></el-button>
+            <el-button @click="addDetail(index + 1)" type="primary" icon="el-icon-plus">从模版</el-button>
+            <el-button @click="addDetail(index + 1)" type="primary">保存模版</el-button>
             <el-button @click="moveDetail(index, -1)" type="primary" icon="el-icon-arrow-up"></el-button>
             <el-button @click="moveDetail(index, 1)" type="primary" icon="el-icon-arrow-down"></el-button>
             <el-button @click="removeDetail(index)" type="danger" icon="el-icon-delete"></el-button>

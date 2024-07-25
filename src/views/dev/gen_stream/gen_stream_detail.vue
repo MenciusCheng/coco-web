@@ -3,8 +3,8 @@
     <el-row>
       <el-col :span="24">
         <!-- 工具条 -->
-        <Toolbar :configs="configs" @config-change="selectConfig" @save="saveConfig" @copy="copyConfig"
-          @reset="resetConfig" @generate="generateResult" />
+        <Toolbar :configId="selectedConfigId" :configs="configs" @config-change="selectConfig" @save="saveConfig"
+          @copy="copyConfig" @reset="resetConfig" @generate="generateResult" :detailChanged="currentConfigChanged" />
 
         <!-- 配置部分 -->
         <ConfigEditor :config="currentConfig" ref="configEditor" />
@@ -30,6 +30,7 @@ export default {
   },
   data() {
     return {
+      selectedConfigId: '',
       configs: [], // 预先加载的配置列表
       currentConfig: {
         id: 0,
@@ -38,6 +39,19 @@ export default {
       },
       generatedResults: []
     };
+  },
+  computed: {
+    currentConfigChanged() {
+      if (this.currentConfig.id) {
+        const matchConfig = this.configs.find(item => item.id === this.currentConfig.id);
+        if (matchConfig) {
+          const a1 = JSON.stringify(this.currentConfig.details);
+          const a2 = JSON.stringify(JSON.parse(matchConfig.extend));
+          return this.currentConfig.name != matchConfig.name || a1 != a2;
+        }
+      }
+      return this.currentConfig.name != '' || this.currentConfig.details.length > 0;
+    }
   },
   methods: {
     loadConfig() {
@@ -56,28 +70,20 @@ export default {
       });
     },
     selectConfig(selectedConfigId) {
-      this.resetConfig();
+      this.selectedConfigId = selectedConfigId;
       // 加载选中的配置
       const config = this.configs.find(c => c.id === selectedConfigId);
       if (config) {
-        // this.currentConfig = JSON.parse(JSON.stringify(config));
         this.currentConfig.id = config.id;
         this.currentConfig.name = config.name;
         this.currentConfig.details = JSON.parse(config.extend);
       } else {
+        this.resetConfig();
         this.loadConfig();
       }
     },
     saveConfig() {
-      // // 保存当前配置
-      // const newConfig = {
-      //   id: this.$refs.configEditor.config.id,
-      //   name: this.$refs.configEditor.config.name,
-      //   details: this.$refs.configEditor.config.details
-      // };
-      // // 提交保存逻辑
-      // console.log("saveConfig", newConfig);
-
+      // 保存当前配置
       const config = this.$refs.configEditor.config;
       let param = {
         id: config.id,
@@ -94,21 +100,20 @@ export default {
           this.$message.success('添加成功');
           this.loadConfig();
           let { id } = res.data;
-          console.log("saveConfig id", id);
-          this.resetConfig(); // TODO 改为选中新的
+          this.selectedConfigId = id;
         });
       }
     },
     copyConfig() {
+      this.selectedConfigId = '';
       // 复制当前配置
-      const newConfig = {
-        id: 0,
-        name: `${this.currentConfig.name}-复制`,
-        details: [...this.currentConfig.details]
-      };
-      this.configs.push(newConfig);
+      this.currentConfig.id = 0;
+      if (this.currentConfig.name) {
+        this.currentConfig.name = `${this.currentConfig.name}-复制`;
+      }
     },
     resetConfig() {
+      this.selectedConfigId = '';
       // 重置当前配置
       this.currentConfig = {
         id: 0,

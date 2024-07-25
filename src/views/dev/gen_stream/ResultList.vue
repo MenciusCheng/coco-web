@@ -1,5 +1,6 @@
 <template>
-  <el-form label-width="80px" size="small">
+  <el-form label-width="80px" size="small" @submit.native.prevent label-position="top">
+    <el-divider content-position="left">生成结果</el-divider>
     <el-row>
       <el-col :span="24" v-for="(item, index) in results" :key="index">
         <el-form-item :label="item.name ? item.name : '生成内容'">

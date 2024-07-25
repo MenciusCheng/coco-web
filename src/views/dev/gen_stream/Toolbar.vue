@@ -1,5 +1,5 @@
 <template>
-  <el-form label-width="80px" size="small">
+  <el-form label-width="80px" size="small" @submit.native.prevent>
     <el-row>
       <el-col :span="12">
         <el-form-item label="选择配置" label-width="80px">
@@ -11,7 +11,7 @@
       <el-col :span="12">
         <el-form-item>
           <el-button @click="onGenerate" type="success" icon="el-icon-caret-right">生成</el-button>
-          <el-button @click="onSave" type="primary">保存</el-button>
+          <el-button @click="onSave" type="primary"><span v-if="detailChanged">*</span>保存</el-button>
           <el-button @click="onCopy" type="primary" icon="el-icon-document-copy">复制</el-button>
           <el-button @click="onReset" type="primary">重置</el-button>
         </el-form-item>
@@ -23,14 +23,25 @@
 <script>
 export default {
   props: {
+    configId: {
+      type: [String, Number],
+    },
     configs: {
       type: Array,
       required: true
+    },
+    detailChanged: {
+      type: Boolean
+    }
+  },
+  watch: {
+    configId() {
+      this.selectedConfigId = this.configId
     }
   },
   data() {
     return {
-      selectedConfigId: null
+      selectedConfigId: this.configId
     }
   },
   methods: {
