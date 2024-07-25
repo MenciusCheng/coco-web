@@ -8,12 +8,12 @@
       </el-col>
       <el-col :span="12">
         <el-form-item>
-          <el-button @click="addDetail(0)" type="primary">添加</el-button>
+          <el-button @click="addDetail(0)" type="primary" icon="el-icon-plus"></el-button>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row v-for="(detail, index) in config.details" :key="index">
-      <el-divider content-position="left">{{ index+1 }}</el-divider>
+      <el-divider content-position="left">{{ index + 1 }}</el-divider>
       <el-row>
         <el-col :span="12">
           <el-form-item label="解析类型" prop="parserType">
@@ -25,10 +25,10 @@
         </el-col>
         <el-col :span="12">
           <el-form-item>
-            <el-button @click="addDetail(index + 1)" type="primary">添加</el-button>
-            <el-button @click="moveDetail(index, -1)" type="primary">上移</el-button>
-            <el-button @click="moveDetail(index, 1)" type="primary">下移</el-button>
-            <el-button @click="removeDetail(index)" type="danger">删除</el-button>
+            <el-button @click="addDetail(index + 1)" type="primary" icon="el-icon-plus"></el-button>
+            <el-button @click="moveDetail(index, -1)" type="primary" icon="el-icon-arrow-up"></el-button>
+            <el-button @click="moveDetail(index, 1)" type="primary" icon="el-icon-arrow-down"></el-button>
+            <el-button @click="removeDetail(index)" type="danger" icon="el-icon-delete"></el-button>
           </el-form-item>
         </el-col>
       </el-row>
@@ -160,8 +160,8 @@ export default {
       }
       this.config.details.splice(index, 0, {
         parserType: '',
-        parserOption: '',
-        parserText: ''
+        parserText: '',
+        parserOption: []
       });
     },
     removeDetail(index) {

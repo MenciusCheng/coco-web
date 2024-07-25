@@ -122,9 +122,23 @@ export default {
       const details = this.$refs.configEditor.config.details;
       if (details) {
         details.forEach(detail => {
+          const opts = [];
+          if (detail.parserOption && detail.parserOption.length > 0) {
+            for (let i = 0; i < detail.parserOption.length; i++) {
+              const optType = detail.parserOption[i];
+              if (optType === 'name') {
+                opts.push({ type: optType, value: detail.optName });
+              } else if (optType === 'sep') {
+                opts.push({ type: optType, value: detail.optSep });
+              } else if (optType === 'replace') {
+                opts.push({ type: optType, value: detail.optReplace });
+              }
+            }
+          }
           const config = {
             type: detail.parserType,
-            text: detail.parserText
+            text: detail.parserText,
+            opts: opts
           }
           configs.push(config);
         });

@@ -10,9 +10,9 @@
       </el-col>
       <el-col :span="12">
         <el-form-item>
-          <el-button @click="onGenerate" type="primary">生成</el-button>
+          <el-button @click="onGenerate" type="success" icon="el-icon-caret-right">生成</el-button>
           <el-button @click="onSave" type="primary">保存</el-button>
-          <el-button @click="onCopy" type="primary">复制</el-button>
+          <el-button @click="onCopy" type="primary" icon="el-icon-document-copy">复制</el-button>
           <el-button @click="onReset" type="primary">重置</el-button>
         </el-form-item>
       </el-col>
