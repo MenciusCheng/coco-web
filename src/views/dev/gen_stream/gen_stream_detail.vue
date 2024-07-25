@@ -70,6 +70,9 @@ export default {
       });
     },
     selectConfig(selectedConfigId) {
+      if (this.selectedConfigId !== selectedConfigId) {
+        this.generatedResults = [];
+      }
       this.selectedConfigId = selectedConfigId;
       // 加载选中的配置
       const config = this.configs.find(c => c.id === selectedConfigId);

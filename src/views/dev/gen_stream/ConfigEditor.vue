@@ -9,8 +9,7 @@
       <el-col :span="12">
         <el-form-item>
           <el-button @click="addDetail(0)" type="primary" icon="el-icon-plus"></el-button>
-          <el-button @click="addDetail(index + 1)" type="primary" icon="el-icon-plus">从模版</el-button>
-          <el-button @click="addDetail(index + 1)" type="primary">保存模版</el-button>
+          <el-button @click="addDetailFromTmpl(0)" type="primary" icon="el-icon-plus">从模版</el-button>
         </el-form-item>
       </el-col>
     </el-row>
@@ -28,8 +27,8 @@
         <el-col :span="12">
           <el-form-item>
             <el-button @click="addDetail(index + 1)" type="primary" icon="el-icon-plus"></el-button>
-            <el-button @click="addDetail(index + 1)" type="primary" icon="el-icon-plus">从模版</el-button>
-            <el-button @click="addDetail(index + 1)" type="primary">保存模版</el-button>
+            <el-button @click="addDetailFromTmpl(index + 1)" type="primary" icon="el-icon-plus">从模版</el-button>
+            <el-button @click="saveDetail(detail)" type="primary">保存模版</el-button>
             <el-button @click="moveDetail(index, -1)" type="primary" icon="el-icon-arrow-up"></el-button>
             <el-button @click="moveDetail(index, 1)" type="primary" icon="el-icon-arrow-down"></el-button>
             <el-button @click="removeDetail(index)" type="danger" icon="el-icon-delete"></el-button>
@@ -76,10 +75,26 @@
         </el-col>
       </el-row>
     </el-row>
+
+    <el-dialog title="从模版新增" :visible.sync="dialogFormVisible">
+      <el-form>
+        <el-form-item label="选择配置" label-width="80px">
+          <el-select v-model="detailTmplId" placeholder="选择模版" clearable filterable :style="{ width: '100%' }">
+            <el-option v-for="item in detailTmplOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirmDialogForm">确 定</el-button>
+      </div>
+    </el-dialog>
   </el-form>
 </template>
 
 <script>
+import * as apiGenStreamDetailTmplConf from '@/api/gen_stream_detail_tmpl';
+
 export default {
   props: {
     config: {
@@ -89,9 +104,10 @@ export default {
   },
   data() {
     return {
-      // configId: this.config.id,
-      // configName: this.config.name,
-      // configDetails: this.config.details,
+      dialogFormVisible: false,
+      detailTmplId: '',
+      detailTmplOptions: [],
+      detailTmplAddIndex: 0,
       parserTypeOptions: [
         {
           "label": "文本",
@@ -147,15 +163,6 @@ export default {
     };
   },
   watch: {
-    // config: {
-    //   handler(newConfig) {
-    //     console.log("watch config", newConfig);
-    //     this.configId = newConfig.id;
-    //     this.configName = newConfig.name;
-    //     this.configDetails = newConfig.details;
-    //   },
-    //   deep: true
-    // }
   },
   methods: {
     addDetail(index) {
@@ -194,6 +201,53 @@ export default {
       }
       return false;
     },
+    loadDetailTmpl() {
+      let param = {
+        page: 1,
+        size: 10000,
+      }
+      apiGenStreamDetailTmplConf.query(param).then(res => {
+        let { list } = res.data;
+        for (let i = 0; i < list.length; i++) {
+        }
+        this.detailTmplOptions = list;
+      }).catch(err => {
+        console.log(err);
+      });
+    },
+    addDetailFromTmpl(index) {
+      if (index < 0 || index > this.config.details.length) {
+        return;
+      }
+      this.detailTmplId = '';
+      this.dialogFormVisible = true;
+      this.detailTmplAddIndex = index;
+      this.loadDetailTmpl();
+    },
+    confirmDialogForm() {
+      if (this.detailTmplId) {
+        const detailObj = this.detailTmplOptions.find(item => item.id === this.detailTmplId);
+        const detail = JSON.parse(detailObj.extend);
+        this.config.details.splice(this.detailTmplAddIndex, 0, detail);
+        this.dialogFormVisible = false;
+      }
+    },
+    saveDetail(detail) {
+      this.$prompt('请输入保存的模版名称', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        const param = {
+          name: value,
+          extend: JSON.stringify(detail),
+        };
+        apiGenStreamDetailTmplConf.create(param).then(res => {
+          this.$message.success('保存成功');
+        })
+      }).catch(() => {
+        this.$message.info('已取消保存');
+      });
+    }
   },
 };
 </script>
