@@ -77,11 +77,16 @@
     </el-row>
 
     <el-dialog title="从模版新增" :visible.sync="dialogFormVisible">
-      <el-form>
+      <el-form size="small">
         <el-form-item label="选择配置" label-width="80px">
-          <el-select v-model="detailTmplId" placeholder="选择模版" clearable filterable :style="{ width: '100%' }">
+          <el-select v-model="detailTmplId" placeholder="选择模版" clearable filterable :style="{ width: '100%' }"
+            @change="onDetailTmplChange">
             <el-option v-for="item in detailTmplOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="预览内容" prop="previewParserText">
+          <el-input v-model="previewParserText" type="textarea" placeholder="请输入解析内容"
+            :autosize="{ minRows: 12, maxRows: 12 }" :style="{ width: '100%' }"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -108,6 +113,7 @@ export default {
       detailTmplId: '',
       detailTmplOptions: [],
       detailTmplAddIndex: 0,
+      previewParserText: '',
       parserTypeOptions: [
         {
           "label": "文本",
@@ -222,14 +228,21 @@ export default {
       this.detailTmplId = '';
       this.dialogFormVisible = true;
       this.detailTmplAddIndex = index;
+      this.previewParserText = '';
       this.loadDetailTmpl();
     },
     confirmDialogForm() {
-      if (this.detailTmplId) {
-        const detailObj = this.detailTmplOptions.find(item => item.id === this.detailTmplId);
+      const detailObj = this.detailTmplOptions.find(item => item.id === this.detailTmplId);
+      if (detailObj) {
         const detail = JSON.parse(detailObj.extend);
         this.config.details.splice(this.detailTmplAddIndex, 0, detail);
         this.dialogFormVisible = false;
+      } else {
+        this.$message({
+          showClose: true,
+          message: '请选择配置',
+          type: 'warning'
+        });
       }
     },
     saveDetail(detail) {
@@ -247,6 +260,15 @@ export default {
       }).catch(() => {
         this.$message.info('已取消保存');
       });
+    },
+    onDetailTmplChange() {
+      const detailObj = this.detailTmplOptions.find(item => item.id === this.detailTmplId);
+      if (detailObj) {
+        const detail = JSON.parse(detailObj.extend);
+        this.previewParserText = detail.parserText;
+      } else {
+        this.previewParserText = '';
+      }
     }
   },
 };

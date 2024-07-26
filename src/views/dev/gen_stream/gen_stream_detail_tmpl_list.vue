@@ -33,7 +33,7 @@
 
     <el-dialog :before-close="resetGenStreamDetailTmplDialog" :title="genStreamDetailTmplDialog.title"
       :visible.sync="genStreamDetailTmplDialog.visible" width="800px">
-      <el-form :inline="true" :model="genStreamDetailTmpl" :rules="genStreamDetailTmplRules" label-width="150px"
+      <el-form :model="genStreamDetailTmpl" :rules="genStreamDetailTmplRules" label-width="150px"
         ref="genStreamDetailTmpl">
         <el-row>
           <el-form-item label="名称" prop="name">
