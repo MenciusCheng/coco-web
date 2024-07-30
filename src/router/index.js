@@ -75,6 +75,12 @@ export const constantRoutes = [
         meta: { title: '数据转换', icon: 'table' }
       },
       {
+        path: 'act_json_conf',
+        name: 'act_json_conf',
+        component: () => import('@/views/dev/act_json_conf/index'),
+        meta: { title: '活动JSON配置', icon: 'table' }
+      },
+      {
         path: 'text_convert',
         name: 'TextConvert',
         component: () => import('@/views/dev/text_convert/index'),
