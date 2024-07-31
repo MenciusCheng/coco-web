@@ -54,7 +54,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24" v-for="(item, index) in genList">
+        <el-col :span="24" v-for="(item, index) in genList" :key="index">
           <el-form-item :label="item.name ? item.name : '生成内容'">
             <el-input type="textarea" v-model="genList[index].content" :rows="16" style="width: 100%;"></el-input>
           </el-form-item>

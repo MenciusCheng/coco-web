@@ -23,6 +23,8 @@
         <template slot-scope="scope">
           <el-button @click="openActJsonConfDialog(true, scope.row)">修改</el-button>
           <el-button @click="deleteActJsonConf(scope.row)" type="danger">删除</el-button>
+          <el-button @click="editJsonItem(scope.row)">编辑JSON</el-button>
+          <el-button @click="editJsonSchema(scope.row)">JSON-Schema</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -50,14 +52,23 @@
         <el-button @click="submitActJsonConfDialog" type="primary">确认</el-button>
       </span>
     </el-dialog>
+
+    <EditJsonDialog :visible.sync="editJsonDialogVisible" :item="actJsonConf" @save="saveJsonItem" v-if="editJsonDialogVisible"></EditJsonDialog>
+    <EditJsonSchema :visible.sync="editJsonSchemaVisible" :item="actJsonConf" @save="saveJsonSchema" v-if="editJsonSchemaVisible"></EditJsonSchema>
   </section>
 </template>
 
 <script>
 import * as apiActJsonConfConf from '@/api/act_json_conf';
 import { dateFormat } from '@/utils/timeUtil';
+import EditJsonDialog from './EditJsonDialog.vue';
+import EditJsonSchema from './EditJsonSchema.vue';
 
 export default {
+  components: {
+    EditJsonDialog,
+    EditJsonSchema,
+  },
   data() {
     return {
       actJsonConf: {
@@ -85,7 +96,9 @@ export default {
         extend: [],
       },
       actJsonConfTableData: [],
-      actJsonConfTableLoading: false
+      actJsonConfTableLoading: false,
+      editJsonDialogVisible: false,
+      editJsonSchemaVisible: false,
     }
   },
   methods: {
@@ -141,6 +154,11 @@ export default {
         this.actJsonConfDialog.isEdit = true;
       } else {
         this.actJsonConfDialog.title = '添加数据';
+        this.actJsonConf = {
+          id: 0,
+          name: '',
+          extend: '',
+        }
         this.actJsonConfDialog.isEdit = false;
       }
       this.actJsonConfDialog.visible = true;
@@ -197,6 +215,24 @@ export default {
       }).catch(() => {
         this.$message.info('已取消修改');
       });
+    },
+    editJsonItem(item) {
+      this.actJsonConf = Object.assign({}, item);
+      this.editJsonDialogVisible = true;
+    },
+    saveJsonItem(item) {
+      console.log('saveJsonItem', item);
+      this.editJsonDialogVisible = false;
+    },
+    editJsonSchema(item) {
+      this.actJsonConf = Object.assign({}, item);
+      this.editJsonSchemaVisible = true;
+    },
+    saveJsonSchema(item) {
+      console.log('saveJsonSchema', item);
+      let param = Object.assign({}, item);
+      this.updateActJsonConf(param);
+      this.editJsonSchemaVisible = false;
     },
   },
   async mounted() {
