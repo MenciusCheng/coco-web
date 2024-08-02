@@ -23,8 +23,10 @@
         </el-col>
         <el-col :span="8">
           <span class="">预览</span>
-          <VueForm v-model="extendData" :schema="schema">
-          </VueForm>
+          <!-- <VueForm v-model="extendData" :schema="schema">
+          </VueForm> -->
+          <dynamic-form v-model="extendData" :schema="schema">
+          </dynamic-form>
         </el-col>
       </el-row>
 
@@ -48,11 +50,13 @@
 <script>
 import VueForm from '@lljj/vue-json-schema-form';
 import VueJsonEditor from "vue-json-editor";
+import DynamicForm from "@/components/DynamicForm";
 
 export default {
   components: {
     VueForm,
     VueJsonEditor,
+    DynamicForm,
   },
   props: {
     visible: {
