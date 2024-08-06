@@ -25,6 +25,8 @@
           <el-button @click="deleteActJsonConf(scope.row)" type="danger">删除</el-button>
           <el-button @click="editJsonItem(scope.row)">编辑JSON</el-button>
           <el-button @click="editJsonSchema(scope.row)">JSON-Schema</el-button>
+          <el-button @click="editJsonTab(scope.row)">JSON-Tab</el-button>
+          <el-button @click="editPreviewJson(scope.row)">PreviewJson</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -55,6 +57,8 @@
 
     <EditJsonDialog :visible.sync="editJsonDialogVisible" :item="actJsonConf" @save="saveJsonItem" v-if="editJsonDialogVisible"></EditJsonDialog>
     <EditJsonSchema :visible.sync="editJsonSchemaVisible" :item="actJsonConf" @save="saveJsonSchema" v-if="editJsonSchemaVisible"></EditJsonSchema>
+    <EditJsonTab :visible.sync="editJsonTabVisible" :item="actJsonConf" @save="saveJsonTab" v-if="editJsonTabVisible"></EditJsonTab>
+    <PreviewJson :visible.sync="editPreviewJsonVisible" :item="actJsonConf" @save="savePreviewJson" v-if="editPreviewJsonVisible"></PreviewJson>
   </section>
 </template>
 
@@ -63,11 +67,15 @@ import * as apiActJsonConfConf from '@/api/act_json_conf';
 import { dateFormat } from '@/utils/timeUtil';
 import EditJsonDialog from './EditJsonDialog.vue';
 import EditJsonSchema from './EditJsonSchema.vue';
+import EditJsonTab from './EditJsonTab.vue';
+import PreviewJson from './PreviewJson.vue';
 
 export default {
   components: {
     EditJsonDialog,
     EditJsonSchema,
+    EditJsonTab,
+    PreviewJson,
   },
   data() {
     return {
@@ -99,6 +107,8 @@ export default {
       actJsonConfTableLoading: false,
       editJsonDialogVisible: false,
       editJsonSchemaVisible: false,
+      editJsonTabVisible: false,
+      editPreviewJsonVisible: false,
     }
   },
   methods: {
@@ -233,6 +243,26 @@ export default {
       let param = Object.assign({}, item);
       this.updateActJsonConf(param);
       this.editJsonSchemaVisible = false;
+    },
+    editJsonTab(item) {
+      this.actJsonConf = Object.assign({}, item);
+      this.editJsonTabVisible = true;
+    },
+    saveJsonTab(item) {
+      console.log('saveJsonTab', item);
+      let param = Object.assign({}, item);
+      this.updateActJsonConf(param);
+      this.editJsonTabVisible = false;
+    },
+    editPreviewJson(item) {
+      this.actJsonConf = Object.assign({}, item);
+      this.editPreviewJsonVisible = true;
+    },
+    savePreviewJson(item) {
+      console.log('savePreviewJson', item);
+      // let param = Object.assign({}, item);
+      // this.updateActJsonConf(param);
+      this.editPreviewJsonVisible = false;
     },
   },
   async mounted() {
