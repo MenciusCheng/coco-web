@@ -8,10 +8,12 @@
 
 <script>
 import ArrayField from './ArrayField.vue';
+import AddressField from './AddressField.vue';
 
 export default {
   components: {
     ArrayField,
+    AddressField,
   },
   name: 'ObjectField',
   props: {

@@ -9,12 +9,14 @@
 <script>
 import ArrayField from './ArrayField.vue';
 import ObjectField from './ObjectField.vue';
+import AddressField from './AddressField.vue';
 
 export default {
   name: 'DynamicForm',
   components: {
     ArrayField,
-    ObjectField
+    ObjectField,
+    AddressField,
   },
   props: {
     schema: {
