@@ -75,6 +75,18 @@ export const constantRoutes = [
         meta: { title: '数据转换', icon: 'table' }
       },
       {
+        path: 'data_source',
+        name: 'data_source',
+        component: () => import('@/views/dev/database_config/DataSourceManager'),
+        meta: { title: '数据源管理', icon: 'table' }
+      },
+      {
+        path: 'database_config',
+        name: 'database_config',
+        component: () => import('@/views/dev/database_config/DataManagement'),
+        meta: { title: '数据管理', icon: 'table' }
+      },
+      {
         path: 'act_json_conf',
         name: 'act_json_conf',
         component: () => import('@/views/dev/act_json_conf/index'),
