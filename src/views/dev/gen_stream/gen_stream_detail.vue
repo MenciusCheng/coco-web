@@ -104,6 +104,7 @@ export default {
           this.loadConfig();
           let { id } = res.data;
           this.selectedConfigId = id;
+          this.currentConfig.id = id;
         });
       }
     },
