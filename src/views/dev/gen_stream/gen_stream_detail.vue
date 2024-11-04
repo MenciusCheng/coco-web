@@ -141,6 +141,8 @@ export default {
                 opts.push({ type: optType, value: detail.optSep });
               } else if (optType === 'replace') {
                 opts.push({ type: optType, value: detail.optReplace });
+              } else if (optType === 'map') {
+                opts.push({ type: optType, value: detail.optMap });
               }
             }
           }

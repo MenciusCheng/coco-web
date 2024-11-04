@@ -64,6 +64,12 @@
             </el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="24" v-if="isInParserOption('map', detail.parserOption)">
+          <el-form-item label="替换文本">
+            <el-input v-model="detail.optMap" type="textarea" placeholder="请输入字典"
+              :autosize="{ minRows: 3, maxRows: 16 }" :style="{ width: '100%' }"></el-input>
+          </el-form-item>
+        </el-col>
       </el-row>
 
       <el-row>
@@ -164,6 +170,10 @@ export default {
         {
           "label": "替换文本",
           "value": "replace"
+        },
+        {
+          "label": "字典",
+          "value": "map"
         }
       ],
     };
