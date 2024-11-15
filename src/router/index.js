@@ -114,6 +114,28 @@ export const constantRoutes = [
   },
 
   {
+    path: '/bookmark',
+    component: Layout,
+    redirect: '/bookmark/list',
+    name: 'bookmark',
+    meta: { title: '书签管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'bookmark_list',
+        name: 'bookmark_list',
+        component: () => import('@/views/bookmark/bookmark_list.vue'),
+        meta: { title: '书签列表', icon: 'table' }
+      },
+      {
+        path: 'bookmark_folder_list',
+        name: 'bookmark_folder_list',
+        component: () => import('@/views/bookmark/bookmark_folder_list'),
+        meta: { title: '文件夹列表', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
     path: '/proto',
     component: Layout,
     redirect: '/proto/gen_stream_form',
