@@ -69,6 +69,12 @@ export const constantRoutes = [
         meta: { title: '流式生成器', icon: 'table' }
       },
       {
+        path: 'be_json',
+        name: 'be_json',
+        component: () => import('@/views/dev/be_json/be_json'),
+        meta: { title: 'BeJson', icon: 'table' }
+      },
+      {
         path: 'data_convert',
         name: 'DataConvert',
         component: () => import('@/views/dev/data_convert/index'),
