@@ -142,6 +142,10 @@ export default {
           "value": "createSql"
         },
         {
+          "label": "protoService",
+          "value": "protoService"
+        },
+        {
           "label": "t:正则表达式",
           "value": "reg"
         },
